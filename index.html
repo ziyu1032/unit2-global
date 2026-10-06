@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Quest · Two Free Trade Models — Level Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --ink: #22304A;
+        --cream: #FCF3DC;
+        --panel: #FFFDF5;
+        --blue: #4A9DE8;
+        --blue-d: #2E7BC4;
+        --yellow: #F7D046;
+        --green: #3DA84A;
+        --green-d: #2E8A3A;
+        --red: #E86A6A;
+        --orange: #F59E0B;
+        --teal: #2FB98D;
+        --label: #4A90D9;
+        --shadow: 4px 4px 0 rgba(34,48,74,.9);
+        --shadow-sm: 3px 3px 0 rgba(34,48,74,.85);
+    }
+    body {
+        font-family: "Baloo 2", "Segoe UI", "Comic Sans MS", Roboto, system-ui, sans-serif;
+        background: repeating-linear-gradient(45deg, #F3E8CC 0 26px, #F6EDD6 26px 52px);
+        min-height: 100vh; display: flex; justify-content: center; align-items: flex-start;
+        padding: 20px 14px; color: var(--ink);
+    }
+    #app {
+        width: 100%; max-width: 900px;
+        background: var(--cream);
+        border: 3px solid var(--ink); border-radius: 26px;
+        box-shadow: 9px 9px 0 rgba(34,48,74,.18);
+        overflow: hidden;
+    }
+    /* ================= header ================= */
+    .header {
+        background: linear-gradient(180deg, #55A7EE, #3F92DE);
+        border-bottom: 3px solid var(--ink);
+        padding: 14px 20px;
+        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { font-size: 30px; filter: drop-shadow(2px 2px 0 rgba(0,0,0,.25)); }
+    h1 { color: #fff; font-size: 1.5rem; font-weight: 800; letter-spacing: .3px;
+         text-shadow: 2px 2px 0 rgba(34,48,74,.55); }
+    .logo-sub { font-size: .72rem; color: #EAF4FF; font-weight: 700; letter-spacing: 1.2px; }
+    .hdr-btns { display: flex; gap: 10px; align-items: center; }
+    .xp-pill {
+        background: #fff; border: 3px solid var(--ink); border-radius: 22px;
+        padding: 7px 20px; font-size: 1rem; font-weight: 800; color: var(--ink);
+        box-shadow: var(--shadow-sm); font-variant-numeric: tabular-nums;
+    }
+    .icon-btn {
+        background: #fff; border: 3px solid var(--ink); color: var(--ink);
+        font-family: inherit; font-size: .84rem; font-weight: 800;
+        padding: 6px 14px; border-radius: 18px; cursor: pointer;
+        box-shadow: var(--shadow-sm); transition: .12s;
+    }
+    .icon-btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 rgba(34,48,74,.9); }
+    .icon-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 rgba(34,48,74,.9); }
+    /* ================= stage tabs ================= */
+    .tabs { display: flex; gap: 14px; padding: 16px 20px 0; }
+    .tab {
+        flex: 1; text-align: center; font-size: .95rem; font-weight: 800;
+        border: 3px solid var(--ink); border-radius: 14px; padding: 10px 6px;
+        background: #ECEAE2; color: #8A8F98;
+        box-shadow: 3px 3px 0 rgba(34,48,74,.25); transition: .15s;
+        cursor: pointer; user-select: none;
+    }
+    .tab:hover { background: #FFF1C4; color: var(--ink); transform: translateY(-1px); }
+    .tab.on { background: var(--yellow); color: var(--ink); transform: translateY(-2px);
+              box-shadow: 4px 4px 0 rgba(34,48,74,.85); }
+    .tab.done { background: #CDEBC9; color: var(--ink); }
+    /* ================= level select ================= */
+    .lv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+    .lv-card {
+        background: #fff; border: 3px solid var(--ink); border-radius: 18px;
+        padding: 16px 14px 14px; text-align: center; cursor: pointer;
+        box-shadow: var(--shadow); transition: .15s; position: relative;
+        display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .lv-card:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 rgba(34,48,74,.9); }
+    .lv-card .lv-no {
+        width: 40px; height: 40px; line-height: 34px; border-radius: 50%;
+        border: 3px solid var(--ink); font-size: 1.15rem; font-weight: 800; background: #fff;
+    }
+    .lv-card .lv-emoji { font-size: 2.1rem; line-height: 1; }
+    .lv-card .lv-name { font-weight: 800; font-size: 1.02rem; color: var(--ink); }
+    .lv-card .lv-desc { font-size: .78rem; color: #6B7280; line-height: 1.35; }
+    .lv-card.lv1 { border-color: var(--red); }
+    .lv-card.lv1 .lv-no { background: #FFE3E3; color: var(--red); }
+    .lv-card.lv2 { border-color: var(--blue); }
+    .lv-card.lv2 .lv-no { background: #E1EFFF; color: var(--blue); }
+    .lv-card.lv3 { border-color: var(--orange); }
+    .lv-card.lv3 .lv-no { background: #FFE9C7; color: var(--orange); }
+    .lv-card .lv-go {
+        margin-top: 4px; font-size: .78rem; font-weight: 800; text-transform: uppercase;
+        background: var(--ink); color: #fff; border-radius: 20px; padding: 6px 16px;
+        letter-spacing: .04em;
+    }
+    .lv-card.lv1:hover .lv-go { background: var(--red); }
+    .lv-card.lv2:hover .lv-go { background: var(--blue); }
+    .lv-card.lv3:hover .lv-go { background: var(--orange); }
+    @media (max-width: 640px) {
+        .lv-grid { grid-template-columns: 1fr; }
+        .modal .lv-grid { grid-template-columns: 1fr; gap: 10px; }
+        .modal .lv-card { flex-direction: row; text-align: left; gap: 12px; }
+        .modal .lv-card .lv-emoji { font-size: 1.6rem; }
+        .modal .lv-card .lv-desc { display: none; }
+        .modal .lv-card .lv-go { margin-left: auto; margin-top: 0; }
+    }
+    .dashed-sep { border-top: 3px dashed #C9CFD8; margin: 14px 20px 0; }
+    /* ================= progress ================= */
+    .progress-track {
+        height: 14px; margin: 12px 20px 4px; background: #EFE7CF;
+        border: 3px solid var(--ink); border-radius: 20px; overflow: hidden;
+    }
+    .progress-fill { height: 100%; width: 0%; background: repeating-linear-gradient(45deg, #F7D046 0 12px, #FFDE65 12px 24px);
+                     transition: width .35s ease; }
+    /* ================= screens ================= */
+    .screen { display: none; padding: 18px 20px 26px; }
+    .screen.active { display: block; animation: fadeUp .3s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .mode-tag {
+        display: inline-block; background: #fff; border: 3px solid var(--ink); color: var(--ink);
+        font-size: .8rem; font-weight: 800; padding: 6px 18px; border-radius: 30px;
+        letter-spacing: .5px; margin-bottom: 14px; box-shadow: var(--shadow-sm);
+    }
+    .mode-tag.warm { background: #FFE9C7; }
+    .card {
+        background: var(--panel); border: 3px solid var(--ink); border-radius: 20px;
+        padding: 20px 22px; margin-bottom: 16px; box-shadow: 5px 5px 0 rgba(34,48,74,.14);
+    }
+    .lead { font-size: 1rem; color: var(--ink); line-height: 1.6; }
+    .lead b { color: var(--blue-d); }
+    .say-note {
+        margin-top: 10px; background: #FFF6DD; border: 3px dashed var(--orange); color: #9a6516;
+        font-size: .86rem; font-weight: 700; border-radius: 14px; padding: 9px 14px; line-height: 1.5;
+    }
+    /* ================= buttons ================= */
+    .btn {
+        display: inline-block; border: 3px solid var(--ink); cursor: pointer; font-family: inherit;
+        font-size: 1rem; font-weight: 800; padding: 12px 30px; border-radius: 16px;
+        box-shadow: var(--shadow); transition: .12s; color: var(--ink);
+    }
+    .btn:hover  { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 rgba(34,48,74,.9); }
+    .btn:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 rgba(34,48,74,.9); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none !important; }
+    .btn-main { background: var(--blue); color: #fff; }
+    .btn-warm { background: var(--orange); color: #fff; }
+    .btn-ghost { background: #fff; }
+    .btn-cta {
+        background: linear-gradient(180deg, #46B355, #348F41); color: #fff;
+        font-size: 1.25rem; font-weight: 800; text-transform: uppercase;
+        padding: 16px 44px; border-radius: 20px; letter-spacing: .5px;
+        border: 3px solid var(--ink); box-shadow: 6px 6px 0 rgba(34,48,74,.9);
+    }
+    .btn-cta:hover  { transform: translate(-1px,-1px); box-shadow: 7px 7px 0 rgba(34,48,74,.9); }
+    .btn-cta:active { transform: translate(4px,4px); box-shadow: 2px 2px 0 rgba(34,48,74,.9); }
+    .center { text-align: center; }
+    /* ================= intel (reading) ================= */
+    .mission-title { text-align: center; font-size: 1.5rem; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+    .mission-sub { text-align: center; font-size: .98rem; font-weight: 700; color: #5A6B85; margin-bottom: 16px; }
+    .mission-sub b { color: var(--green-d); }
+    .intel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .intel-card { background: #fff; border: 3px solid; border-radius: 18px; padding: 16px 18px 14px;
+                  box-shadow: 4px 4px 0 rgba(34,48,74,.12); }
+    .intel-card.hainan  { border-color: var(--red); }
+    .intel-card.xinjiang{ border-color: var(--orange); }
+    .intel-card h3 { text-align: center; font-size: 1.28rem; font-weight: 800;
+                     padding-bottom: 9px; margin-bottom: 12px; border-bottom: 3px dashed #DBDBD3; }
+    .intel-card.hainan h3  { color: var(--red); }
+    .intel-card.xinjiang h3{ color: var(--orange); }
+    .intel-line { font-size: .93rem; line-height: 1.62; margin-bottom: 10px; color: #2A3A55; font-weight: 600; }
+    .intel-line .lbl { color: var(--label); font-weight: 800; }
+    .map-hint { display: flex; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
+    .map-chip { flex: 1 1 250px; background: #FFF9EA; border: 3px solid var(--ink); border-radius: 14px;
+                padding: 10px 14px; font-size: .85rem; font-weight: 600; color: #2A3A55; line-height: 1.5;
+                box-shadow: var(--shadow-sm); }
+    .map-chip b { color: var(--blue-d); }
+    /* ================= level 1 quiz ================= */
+    .l1-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .q-counter {
+        background: #fff; border: 3px solid var(--ink); border-radius: 30px; padding: 5px 16px;
+        font-size: .88rem; font-weight: 800; box-shadow: var(--shadow-sm);
+    }
+    .timer-chip {
+        background: var(--yellow); border: 3px solid var(--ink); border-radius: 30px; padding: 5px 16px;
+        font-size: .92rem; font-weight: 800; box-shadow: var(--shadow-sm); font-variant-numeric: tabular-nums;
+    }
+    .timer-chip.warn { background: #FFB3B3; animation: pulse .8s infinite; }
+    @keyframes pulse { 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.12);} }
+    .l1-statement {
+        font-size: 1.4rem; font-weight: 800; color: var(--ink); text-align: center;
+        line-height: 1.45; padding: 16px 10px; min-height: 100px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .l1-statement .kw { color: var(--orange); }
+    .choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+    .choice-btn {
+        border: 3px solid var(--ink); cursor: pointer; font-family: inherit; color: #fff;
+        font-size: 1.15rem; font-weight: 800; padding: 18px 10px; border-radius: 18px;
+        transition: .12s; box-shadow: 5px 5px 0 rgba(34,48,74,.85);
+        display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .choice-btn .em { font-size: 2rem; filter: drop-shadow(2px 2px 0 rgba(0,0,0,.2)); }
+    .choice-btn .sub { font-size: .7rem; font-weight: 700; opacity: .92; letter-spacing: .6px; }
+    .choice-h { background: linear-gradient(180deg, #35C294, #27A67C); }
+    .choice-x { background: linear-gradient(180deg, #F7A823, #E8890C); }
+    .choice-btn:hover  { transform: translate(-1px,-2px); box-shadow: 6px 7px 0 rgba(34,48,74,.85); }
+    .choice-btn:active { transform: translate(3px,3px); box-shadow: 2px 2px 0 rgba(34,48,74,.85); }
+    .choice-btn:disabled { cursor: default; }
+    .choice-btn.correct { background: linear-gradient(180deg, #46B355, #348F41); outline: 3px solid #fff; animation: pop .3s ease; }
+    .choice-btn.wrong   { outline: 3px solid #fff; animation: shake .35s ease; filter: grayscale(.35) brightness(.92); }
+    @keyframes pop { 0%{transform:scale(1);} 50%{transform:scale(1.05);} 100%{transform:scale(1);} }
+    @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-7px);} 75%{transform:translateX(7px);} }
+    /* ================= feedback ================= */
+    .feedback { margin-top: 14px; border-radius: 16px; padding: 12px 16px; font-size: .93rem;
+                line-height: 1.55; display: none; border: 3px solid; font-weight: 600; }
+    .feedback.show { display: block; animation: fadeUp .25s ease; }
+    .feedback.good { background: #E8F7E4; border-color: var(--green); color: #1d6b2e; box-shadow: 3px 3px 0 rgba(61,168,74,.35); }
+    .feedback.bad  { background: #FDEAEA; border-color: var(--red);  color: #a93226; box-shadow: 3px 3px 0 rgba(232,106,106,.35); }
+    .feedback .fb-tag { font-weight: 800; display: block; margin-bottom: 3px; }
+    .fb-dim { display: inline-block; background: #fff; border: 2px solid var(--ink); color: var(--ink);
+              font-size: .72rem; font-weight: 800; padding: 2px 12px; border-radius: 20px; margin-top: 7px; }
+    /* ================= level 2 ================= */
+    .q-text { font-size: 1.22rem; font-weight: 800; color: var(--ink); line-height: 1.45; text-align: center; padding: 4px 4px 16px; }
+    .opt {
+        display: block; width: 100%; text-align: left; font-family: inherit; cursor: pointer;
+        background: #fff; border: 3px solid var(--ink); border-radius: 16px;
+        padding: 13px 16px 13px 14px; font-size: .97rem; color: #2A3A55; line-height: 1.5;
+        margin-bottom: 12px; transition: .12s; font-weight: 600; box-shadow: 4px 4px 0 rgba(34,48,74,.2);
+    }
+    .opt .letter {
+        display: inline-flex; width: 28px; height: 28px; border-radius: 9px; align-items: center; justify-content: center;
+        background: var(--yellow); border: 2px solid var(--ink); color: var(--ink);
+        font-weight: 800; font-size: .82rem; margin-right: 11px;
+    }
+    .opt:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 rgba(34,48,74,.3); background: #FFFDF0; }
+    .opt:disabled { cursor: default; }
+    .opt.correct { border-color: var(--green); background: #E8F7E4; box-shadow: 4px 4px 0 rgba(61,168,74,.5); }
+    .opt.correct .letter { background: var(--green); color: #fff; }
+    .opt.wrong { border-color: var(--red); background: #FDEAEA; animation: shake .35s ease; opacity: .75; box-shadow: 2px 2px 0 rgba(232,106,106,.4); }
+    .opt.wrong .letter { background: var(--red); color: #fff; }
+    .speak-moment {
+        margin-top: 14px; background: #EFF8EC; border: 3px solid var(--green); border-radius: 16px;
+        padding: 12px 16px; font-size: .92rem; color: #1d6b2f; line-height: 1.55; font-weight: 600;
+        box-shadow: 3px 3px 0 rgba(61,168,74,.3);
+    }
+    .speak-moment b { color: #145a2e; }
+    .l2-model {
+        display: none; margin-top: 12px; background: #fff; border: 3px solid var(--blue);
+        border-radius: 14px; padding: 12px 15px; font-size: .94rem; line-height: 1.7; color: #2A3A55;
+        box-shadow: 3px 3px 0 rgba(74,157,232,.35);
+    }
+    .l2-model.show { display: block; animation: fadeUp .25s ease; }
+    .l2-model b { color: var(--blue-d); }
+    /* ================= level 3 ================= */
+    .part-switch { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+    .part-pill {
+        font-size: .84rem; font-weight: 800; padding: 7px 20px; border-radius: 30px;
+        background: #ECEAE2; color: #8A8F98; border: 3px solid var(--ink); box-shadow: 3px 3px 0 rgba(34,48,74,.25);
+        cursor: pointer; user-select: none; transition: .15s;
+    }
+    .part-pill:hover { transform: translateY(-1px); box-shadow: 4px 4px 0 rgba(34,48,74,.35); }
+    .part-pill.on { background: var(--yellow); color: var(--ink); transform: translateY(-2px); }
+    .frame-text { font-size: 1.05rem; line-height: 2.2; color: #2A3A55; font-weight: 600; }
+    .blank {
+        display: inline-block; min-width: 120px; text-align: center;
+        border-bottom: 4px dashed #9AA7BE; color: var(--blue-d); font-weight: 800;
+        cursor: pointer; padding: 0 6px; margin: 0 2px; transition: .15s;
+    }
+    .blank.filled { border-bottom-style: solid; border-bottom-color: var(--blue-d); }
+    .blank.locked { color: var(--green-d); border-bottom-color: var(--green); cursor: default; }
+    .blank.err { animation: shake .35s ease; border-bottom-color: var(--red); color: var(--red); }
+    .blank.current {
+        background: #FFF9E0; border-radius: 8px 8px 0 0;
+        box-shadow: 0 0 0 3px rgba(247,208,70,.55); animation: pulseCur 1.4s ease-in-out infinite;
+    }
+    .chip.shake-err { animation: shake .35s ease; border-color: var(--red); color: var(--red); background: #FFE3E3; }
+    .l2-navrow { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    @keyframes pulseCur {
+        0%, 100% { box-shadow: 0 0 0 3px rgba(247,208,70,.45); }
+        50%      { box-shadow: 0 0 0 6px rgba(247,208,70,.75); }
+    }
+    .chip-bank { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 18px; justify-content: center; }
+    .chip {
+        background: #fff; border: 3px solid var(--ink); color: var(--ink);
+        font-family: inherit; font-size: .93rem; font-weight: 800; padding: 9px 20px;
+        border-radius: 40px; cursor: pointer; transition: .12s; box-shadow: 3px 3px 0 rgba(34,48,74,.8);
+    }
+    .chip:hover  { transform: translate(-1px,-2px); box-shadow: 4px 5px 0 rgba(34,48,74,.8); background: #FFF6D8; }
+    .chip:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 rgba(34,48,74,.8); }
+    .chip.used { opacity: .22; pointer-events: none; transform: scale(.92); box-shadow: none; }
+    .model-ans {
+        display: none; background: #fff; border: 3px solid var(--blue); border-radius: 16px;
+        padding: 14px 18px; margin-top: 14px; font-size: .97rem; line-height: 2; color: #2A3A55;
+        box-shadow: 3px 3px 0 rgba(74,157,232,.3);
+    }
+    .model-ans.show { display: block; animation: fadeUp .3s ease; }
+    .model-ans .a { color: var(--blue-d); font-weight: 800; font-style: italic; text-decoration: underline; }
+    .speak-panel { display: none; margin-top: 14px; }
+    .speak-panel.show { display: block; animation: fadeUp .3s ease; }
+    .timer-box { text-align: center; padding: 10px 0 4px; }
+    .timer-num { font-size: 3.2rem; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums;
+                 text-shadow: 3px 3px 0 rgba(34,48,74,.15); }
+    .timer-num.running { color: var(--orange); }
+    .timer-bar { height: 16px; background: #EFE7CF; border: 3px solid var(--ink); border-radius: 20px;
+                 overflow: hidden; margin: 8px auto 6px; max-width: 430px; }
+    .timer-fill { height: 100%; width: 100%; background: repeating-linear-gradient(45deg, var(--orange) 0 12px, #FFB84D 12px 24px);
+                  transition: width 1s linear; }
+    .check-list { margin-top: 14px; }
+    .check-item {
+        display: flex; align-items: flex-start; gap: 11px; background: #fff; border: 3px solid var(--ink);
+        border-radius: 14px; padding: 10px 14px; margin-bottom: 9px; cursor: pointer; font-size: .92rem;
+        color: #2A3A55; font-weight: 700; transition: .12s; line-height: 1.4; box-shadow: 3px 3px 0 rgba(34,48,74,.2);
+    }
+    .check-item:hover { background: #FFFDF0; }
+    .check-item .box {
+        flex: 0 0 24px; width: 24px; height: 24px; border-radius: 8px; border: 3px solid var(--ink);
+        display: inline-flex; align-items: center; justify-content: center; font-size: .85rem; color: #fff; margin-top: 1px;
+        background: #fff;
+    }
+    .check-item.on { border-color: var(--green); background: #E8F7E4; }
+    .check-item.on .box { background: var(--green); }
+    .stars-row { text-align: center; font-size: 2.1rem; letter-spacing: 8px; margin-top: 8px; min-height: 2.4rem; }
+    /* ================= level result ================= */
+    .result-banner { text-align: center; padding: 10px 0 4px; }
+    .result-banner .big { font-size: 2rem; font-weight: 800; color: var(--ink); text-shadow: 3px 3px 0 rgba(247,208,70,.6); }
+    .result-banner .sub { font-size: .95rem; color: #5A6B85; margin-top: 5px; font-weight: 700; }
+    .stat-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin: 16px 0; }
+    .stat-card { background: #fff; border: 3px solid var(--ink); border-radius: 18px; padding: 12px 24px;
+                 text-align: center; min-width: 132px; box-shadow: 4px 4px 0 rgba(34,48,74,.2); }
+    .stat-card .v { font-size: 1.5rem; font-weight: 800; color: var(--ink); }
+    .stat-card .k { font-size: .72rem; font-weight: 800; color: #8A8F98; letter-spacing: .8px; }
+    /* ================= final ================= */
+    .badge-emoji { font-size: 3.6rem; text-align: center; animation: floatY 2.2s ease-in-out infinite;
+                   filter: drop-shadow(3px 4px 0 rgba(34,48,74,.25)); }
+    @keyframes floatY { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-9px);} }
+    .badge-name { text-align: center; font-size: 1.55rem; font-weight: 800; color: var(--ink); margin-top: 4px; }
+    .homework {
+        background: #FFF6DD; border: 3px dashed var(--orange); border-radius: 16px;
+        padding: 13px 17px; font-size: .93rem; color: #9a6516; line-height: 1.6; margin-top: 16px; font-weight: 600;
+    }
+    .homework b { color: #b05e12; }
+    /* ================= fact modal ================= */
+    .modal-mask {
+        display: none; position: fixed; inset: 0; background: rgba(34,48,74,.55); z-index: 50;
+        justify-content: center; align-items: center; padding: 18px;
+    }
+    .modal-mask.show { display: flex; }
+    .modal {
+        background: var(--panel); border: 3px solid var(--ink); border-radius: 22px; max-width: 730px; width: 100%;
+        max-height: 86vh; overflow: auto; padding: 22px; animation: fadeUp .25s ease;
+        box-shadow: 8px 8px 0 rgba(34,48,74,.35);
+    }
+    .modal h2 { color: var(--ink); font-size: 1.25rem; margin-bottom: 4px; }
+    .modal .m-sub { font-size: .83rem; color: #8A8F98; margin-bottom: 12px; font-weight: 700; }
+    /* filled-in answer for a ______ blank in Stage 2 speaking prompts */
+    .blank-key {
+        display: inline-block; background: #FFF1C4; color: #B45309;
+        border: 2px dashed var(--orange); border-radius: 8px;
+        padding: 1px 8px; margin: 0 2px; font-weight: 800; font-style: italic;
+    }
+    table.fact { width: 100%; border-collapse: collapse; font-size: .85rem; background: #fff; }
+    table.fact th, table.fact td { border: 3px solid var(--ink); padding: 9px 11px; text-align: left; vertical-align: top; line-height: 1.5; }
+    table.fact th { background: var(--blue); color: #fff; font-size: .87rem; }
+    table.fact td.dim { background: #FFF3C9; font-weight: 800; color: var(--ink); white-space: nowrap; }
+    .modal-close { margin-top: 14px; }
+    /* ================= confetti ================= */
+    #confetti-layer { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 99; }
+    .cf { position: absolute; width: 11px; height: 15px; top: -20px; border-radius: 3px; animation: cfall linear forwards; }
+    @keyframes cfall { to { transform: translateY(110vh) rotate(720deg); opacity: .9; } }
+    @media (max-width: 680px) {
+        body { padding: 10px 6px; }
+        #app { border-radius: 20px; }
+        h1 { font-size: 1.15rem; }
+        .intel-grid { grid-template-columns: 1fr; }
+        .choice-row { grid-template-columns: 1fr; }
+        .tabs { gap: 8px; padding: 12px 12px 0; }
+        .tab { font-size: .72rem; padding: 8px 4px; }
+        .l1-statement { font-size: 1.15rem; }
+        .timer-num { font-size: 2.5rem; }
+        .screen { padding: 14px 12px 20px; }
+        .btn-cta { font-size: 1.05rem; padding: 13px 30px; }
+    }
+</style>
+</head>
+<body>
+<div id="app">
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🎮</span>
+            <div>
+                <h1>Trade Quest: Two Free Trade Models</h1>
+                <div class="logo-sub">HAINAN FTP 🌴 × XINJIANG PILOT FTZ ⛰️ · ORAL CHALLENGE</div>
+            </div>
+        </div>
+        <div class="hdr-btns">
+            <button class="icon-btn" id="btn-levels" onclick="openLevels()">🗂️ Levels</button>
+            <button class="icon-btn" onclick="openFact()">📖 Fact Card</button>
+            <button class="icon-btn" id="btn-sound" onclick="toggleSound()">🔊</button>
+            <div class="xp-pill" id="score-pill">XP: 0</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab" id="tab-1" onclick="gotoLevel(1)" title="Jump to Stage 1">1. Intel 📋</div>
+        <div class="tab" id="tab-2" onclick="gotoLevel(2)" title="Jump to Stage 2">2. Quiz 🎯</div>
+        <div class="tab" id="tab-3" onclick="gotoLevel(3)" title="Jump to Stage 3">3. Fill Blanks 🔥</div>
+    </div>
+    <div class="dashed-sep"></div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <!-- ============ START ============ -->
+    <section class="screen active" id="screen-start">
+        <div class="center" style="margin-bottom:14px;">
+            <span class="mode-tag warm">🎯 3-LEVEL CHALLENGE · SPEAK AS YOU PLAY</span>
+        </div>
+        <div class="card">
+            <p class="lead" style="text-align:center;">
+                Two Chinese regions, two open-economy models. <b>Hainan</b> is a tropical island building a
+                world-class <b>Free Trade Port</b>. <b>Xinjiang</b> is a land-border region piloting a
+                <b>Free Trade Zone</b>. Today you will master both — and talk about them in English!
+            </p>
+            <div class="intel-grid" style="margin-top:16px;">
+                <div class="intel-card hainan">
+                    <h3>🌴 Hainan FTP</h3>
+                    <p class="intel-line"><span class="lbl">Mission:</span> island industries — tourism, services, high-tech.</p>
+                    <p class="intel-line"><span class="lbl">Weapons:</span> zero-tariff list, 15% income tax, simplified visa.</p>
+                    <p class="intel-line"><span class="lbl">Style:</span> largest FTP by land area. 🌊</p>
+                </div>
+                <div class="intel-card xinjiang">
+                    <h3>⛰️ Xinjiang Pilot FTZ</h3>
+                    <p class="intel-line"><span class="lbl">Mission:</span> border industries — trade, logistics, energy.</p>
+                    <p class="intel-line"><span class="lbl">Weapons:</span> land ports, Central Asia connectivity, customs supervision.</p>
+                    <p class="intel-line"><span class="lbl">Style:</span> China's western gateway. 🚂</p>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="intel-line" style="margin-bottom:6px;"><span class="lbl">🗺️ Your quest map:</span></div>
+            <p class="intel-line">🧭 <b>Stage 1 · Intel</b> — read the two region cards, then sort <b>16 facts</b> against the clock (120s, shuffled every round).</p>
+            <p class="intel-line">🎯 <b>Stage 2 · Quiz</b> — answer 4 big thinking questions. Wrong picks? Try again until you crack it!</p>
+            <p class="intel-line">🎤 <b>Stage 3 · Fill Blanks</b> — complete a speech frame for each region, then retell it aloud for one minute.</p>
+        </div>
+        <div class="card">
+            <div class="intel-line" style="margin-bottom:4px;"><span class="lbl">🎮 Choose a level — play any stage you like:</span></div>
+            <div class="lv-grid">
+                <div class="lv-card lv1" onclick="gotoLevel(1)">
+                    <div class="lv-no">1</div>
+                    <div class="lv-emoji">📋</div>
+                    <div class="lv-name">Intel</div>
+                    <div class="lv-desc">Read &amp; sort 16 facts<br>120s · shuffled</div>
+                    <div class="lv-go">Play ▶</div>
+                </div>
+                <div class="lv-card lv2" onclick="gotoLevel(2)">
+                    <div class="lv-no">2</div>
+                    <div class="lv-emoji">🎯</div>
+                    <div class="lv-name">Quiz</div>
+                    <div class="lv-desc">4 thinking questions<br>retry until correct</div>
+                    <div class="lv-go">Play ▶</div>
+                </div>
+                <div class="lv-card lv3" onclick="gotoLevel(3)">
+                    <div class="lv-no">3</div>
+                    <div class="lv-emoji">🔥</div>
+                    <div class="lv-name">Fill Blanks</div>
+                    <div class="lv-desc">Speech frames + retell<br>answer &amp; speak</div>
+                    <div class="lv-go">Play ▶</div>
+                </div>
+            </div>
+        </div>
+        <div class="center" style="margin-top:18px;">
+            <button class="btn btn-cta" onclick="startL1()">Start Full Quest ▶</button>
+        </div>
+    </section>
+
+    <!-- ============ LEVEL 1 READING (INTEL) ============ -->
+    <section class="screen" id="screen-l1read">
+        <div class="mission-title">📖 Mission Briefing: Read the Intel</div>
+        <p class="mission-sub">Challenge: finish all <b>16 facts</b> in <b>120 seconds</b>. Study the two region cards, then beat the clock!</p>
+        <div class="intel-grid">
+            <div class="intel-card hainan">
+                <h3>🌴 Hainan FTP</h3>
+                <p class="intel-line"><span class="lbl">Strategic Priorities:</span> Tropical tourism, modern services, high-tech industries, high-efficiency tropical agriculture.</p>
+                <p class="intel-line"><span class="lbl">Industrial Clusters:</span> Digital economy, commercial aerospace, deep-sea tech, modern biomedicine, petrochemical new materials.</p>
+                <p class="intel-line"><span class="lbl">Policy Advantages:</span> Zero-tariff list, 15% corporate &amp; personal income tax, simplified visa, largest FTP by land area.</p>
+            </div>
+            <div class="intel-card xinjiang">
+                <h3>⛰️ Xinjiang Pilot FTZ</h3>
+                <p class="intel-line"><span class="lbl">Strategic Priorities:</span> Border trade, logistics hub, energy processing, modern agriculture, textile industry.</p>
+                <p class="intel-line"><span class="lbl">Industrial Clusters:</span> Cross-border e-commerce, energy &amp; chemical processing, textile &amp; garment, agricultural product export.</p>
+                <p class="intel-line"><span class="lbl">Policy Advantages:</span> Border trade facilitation, land port advantages, Central Asia connectivity, special customs supervision.</p>
+            </div>
+        </div>
+        <div class="map-hint">
+            <div class="map-chip">🌴 <b>Hainan</b> — an island province in the South China Sea. Sea routes, tourists, and a huge open-economy experiment.</div>
+            <div class="map-chip">⛰️ <b>Xinjiang</b> — China's northwestern border region. It connects China to Central Asia by land ports.</div>
+        </div>
+        <div class="center" style="margin-top:20px;">
+            <button class="btn btn-cta" onclick="startL1Quiz()">I'M READY! START QUIZ 🚀</button>
+        </div>
+    </section>
+
+    <!-- ============ LEVEL 1 QUIZ ============ -->
+    <section class="screen" id="screen-l1">
+        <div class="center" style="margin-bottom:12px;"><span class="mode-tag">🧭 STAGE 1 · WHICH REGION AM I? · 16 FACTS</span></div>
+        <div class="l1-meta">
+            <span class="q-counter" id="l1-counter">Fact 1 / 16</span>
+            <span class="timer-chip" id="l1-timer-wrap">⏱ <span id="l1-timer">120</span>s</span>
+            <button class="icon-btn" onclick="startL1()">🔄 Restart</button>
+        </div>
+        <div class="card">
+            <div class="l1-statement" id="l1-statement"></div>
+            <div class="choice-row">
+                <button class="choice-btn choice-h" id="btn-h" onclick="l1Answer('h')">
+                    <span class="em">🌴</span>Hainan FTP
+                    <span class="sub">TROPICAL ISLAND · SOUTH CHINA SEA</span>
+                </button>
+                <button class="choice-btn choice-x" id="btn-x" onclick="l1Answer('x')">
+                    <span class="em">⛰️</span>Xinjiang Pilot FTZ
+                    <span class="sub">LAND BORDER · NORTHWEST CHINA</span>
+                </button>
+            </div>
+            <div class="feedback" id="l1-feedback"></div>
+        </div>
+        <div class="center" style="margin-top:8px;">
+            <button class="btn btn-main" id="l1-next" style="display:none;" onclick="l1Next()">Next Fact ▶</button>
+        </div>
+    </section>
+
+    <!-- ============ LEVEL 2 ============ -->
+    <section class="screen" id="screen-l2">
+        <div class="center" style="margin-bottom:12px;"><span class="mode-tag warm">🎯 STAGE 2 · THINK &amp; CHOOSE · 4 QUESTIONS</span></div>
+        <div class="l1-meta">
+            <span class="q-counter" id="l2-counter">Question 1 / 4</span>
+            <button class="icon-btn" onclick="startL2()">🔄 Restart</button>
+        </div>
+        <div class="card">
+            <div class="q-text" id="l2-question"></div>
+            <div id="l2-options"></div>
+            <div class="feedback" id="l2-feedback"></div>
+            <div class="speak-moment" id="l2-speak" style="display:none;"></div>
+        </div>
+        <div class="center l2-navrow" style="margin-top:8px;">
+            <button class="btn btn-ghost" id="l2-prev" onclick="l2Prev()">◀ Previous Question</button>
+            <button class="btn btn-main" id="l2-next" style="display:none;" onclick="l2Next()">Next Question ▶</button>
+        </div>
+    </section>
+
+    <!-- ============ LEVEL 3 ============ -->
+    <section class="screen" id="screen-l3">
+        <div class="center" style="margin-bottom:12px;"><span class="mode-tag warm">🎤 STAGE 3 · FILL BLANKS &amp; RETELL · SPEAK FOR 1 MINUTE</span></div>
+        <div class="part-switch">
+            <span class="part-pill on" id="pill-a" onclick="l3GoPart(0)" title="Do Hainan first or second — your choice">PART A · 🌴 HAINAN</span>
+            <span class="part-pill" id="pill-b" onclick="l3GoPart(1)" title="Do Xinjiang first or second — your choice">PART B · ⛰️ XINJIANG</span>
+        </div>
+        <div class="center" style="margin-top:-4px;">
+            <span class="say-note">👆 Pick <b>either region first</b> — just click PART A or PART B to switch.</span>
+        </div>
+        <div class="card">
+            <p class="lead" id="l3-instruction" style="margin-bottom:14px;">
+                👉 Click the words below to fill in the speech frame — one blank at a time. When a word is right it locks in green; if it is wrong, you will see it turn red and it goes back to the word bank. When the frame is complete, read it — then retell it <b>in your own words</b>!
+            </p>
+            <div class="frame-text" id="l3-frame"></div>
+            <div class="chip-bank" id="l3-chips"></div>
+            <div class="model-ans" id="l3-model"></div>
+            <div class="feedback" id="l3-feedback"></div>
+            <div class="center" style="margin-top:16px;">
+                <button class="btn btn-ghost" id="l3-redo" onclick="l3RedoPart()">🔄 Redo This Part</button>
+            </div>
+            <div class="speak-panel" id="l3-speak">
+                <div class="say-note" style="margin:12px 0 4px;">
+                    🎤 <b>Speaking time!</b> Close your eyes or look away from the text. Introduce this region
+                    <b>in your own words</b> for one minute. Your partner listens and ticks the checklist.
+                </div>
+                <div class="timer-box">
+                    <div class="timer-num running" id="l3-timer">60</div>
+                    <div class="timer-bar"><div class="timer-fill" id="l3-timer-fill"></div></div>
+                    <button class="btn btn-warm" style="font-size:.85rem; padding:8px 20px;" id="l3-timer-start" onclick="l3StartTimer()">▶ Start 60s Timer</button>
+                    <button class="btn btn-ghost" style="font-size:.85rem; padding:8px 20px;" onclick="l3StopTimer(true)">Finish Speaking ✓</button>
+                </div>
+                <div class="check-list" id="l3-checklist" style="display:none;"></div>
+                <div class="stars-row" id="l3-stars"></div>
+                <div class="center" style="margin-top:8px;">
+                    <button class="btn btn-main" id="l3-nextpart" style="display:none;" onclick="l3NextPart()">Part B: Xinjiang ▶</button>
+                    <button class="btn btn-cta" id="l3-finish" style="display:none;" onclick="showFinal()">🏁 See My Result</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ LEVEL RESULTS ============ -->
+    <section class="screen" id="screen-lresult">
+        <div class="result-banner" id="lr-banner"></div>
+        <div class="stat-row" id="lr-stats"></div>
+        <p class="lead center" id="lr-note" style="margin-bottom:18px;"></p>
+        <div class="center" id="lr-btns">
+            <button class="btn btn-ghost" id="lr-retry" style="display:none;">🔄 Restart this Level (shuffled)</button>
+            <button class="btn btn-cta" id="lr-go" onclick="">Continue ▶</button>
+        </div>
+    </section>
+
+    <!-- ============ FINAL ============ -->
+    <section class="screen" id="screen-final">
+        <div class="badge-emoji" id="fin-badge-emoji">🏆</div>
+        <div class="badge-name" id="fin-badge">Global Trade Explorer</div>
+        <div class="stat-row" id="fin-stats"></div>
+        <p class="lead center" id="fin-note"></p>
+        <div class="homework">
+            <b>📣 After-class mission:</b> Record yourself on your phone introducing <b>both</b> regions in
+            90 seconds — strategic priorities, one or two industrial clusters, and one policy advantage each.
+            Bring your recording to the next class!
+        </div>
+        <div class="center" style="margin-top:18px;">
+            <button class="btn btn-ghost" onclick="resetGame()">🔄 Play Again</button>
+        </div>
+    </section>
+</div>
+
+<!-- ============ LEVEL SELECT MODAL ============ -->
+<div class="modal-mask" id="level-modal" onclick="if(event.target===this)closeLevels()">
+    <div class="modal">
+        <h2>🎮 Choose a Level</h2>
+        <div class="m-sub">Jump straight into any stage — your XP keeps counting.</div>
+        <div class="lv-grid">
+            <div class="lv-card lv1" onclick="gotoLevel(1)">
+                <div class="lv-no">1</div>
+                <div class="lv-emoji">📋</div>
+                <div class="lv-name">Intel</div>
+                <div class="lv-desc">Read the two region cards, then sort 16 facts against the clock.</div>
+                <div class="lv-go">Play ▶</div>
+            </div>
+            <div class="lv-card lv2" onclick="gotoLevel(2)">
+                <div class="lv-no">2</div>
+                <div class="lv-emoji">🎯</div>
+                <div class="lv-name">Quiz</div>
+                <div class="lv-desc">4 big thinking questions — retry until you crack it.</div>
+                <div class="lv-go">Play ▶</div>
+            </div>
+            <div class="lv-card lv3" onclick="gotoLevel(3)">
+                <div class="lv-no">3</div>
+                <div class="lv-emoji">🔥</div>
+                <div class="lv-name">Fill Blanks</div>
+                <div class="lv-desc">Complete the speech frames, then retell each region aloud.</div>
+                <div class="lv-go">Play ▶</div>
+            </div>
+        </div>
+        <div class="center" style="margin-top:16px;">
+            <button class="btn btn-ghost" onclick="closeLevels()">Close ✕</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ FACT CARD MODAL ============ -->
+<div class="modal-mask" id="fact-modal" onclick="if(event.target===this)closeFact()">
+    <div class="modal">
+        <h2>📖 Fact Card · Two Free Trade Models Compared</h2>
+        <div class="m-sub">Global Vision — use it any time during the game</div>
+        <table class="fact">
+            <tr><th>Dimension</th><th>🌴 Hainan FTP</th><th>⛰️ Xinjiang Pilot FTZ</th></tr>
+            <tr>
+                <td class="dim">Strategic Priorities</td>
+                <td>Tropical tourism, modern services, high-tech industries, high-efficiency tropical agriculture</td>
+                <td>Border trade, logistics hub, energy processing, modern agriculture, textile industry</td>
+            </tr>
+            <tr>
+                <td class="dim">Industrial Clusters</td>
+                <td>Digital economy, commercial aerospace, deep-sea tech, modern biomedicine, petrochemical new materials</td>
+                <td>Cross-border e-commerce, energy &amp; chemical processing, textile &amp; garment, agricultural product export</td>
+            </tr>
+            <tr>
+                <td class="dim">Policy Advantages</td>
+                <td>Zero-tariff list, 15% corporate &amp; personal income tax, simplified visa, largest FTP by land area</td>
+                <td>Border trade facilitation, land port advantages, Central Asia connectivity, special customs supervision</td>
+            </tr>
+        </table>
+        <div class="map-hint">
+            <div class="map-chip">🌴 <b>Hainan</b> — an island province in the South China Sea. Sea routes, tourists, and a huge open-economy experiment.</div>
+            <div class="map-chip">⛰️ <b>Xinjiang</b> — China's northwestern border region. It connects China to Central Asia by land ports.</div>
+        </div>
+        <div class="center modal-close"><button class="btn btn-ghost" onclick="closeFact()">Close ✕</button></div>
+    </div>
+</div>
+<div id="confetti-layer"></div>
+
+<script>
+/* ==================== DATA ==================== */
+const L1_DATA = [
+    /* --- Strategic Priorities --- */
+    { s: "<span class='kw'>Tropical tourism</span> and modern services are among its strategic priorities.", a: "h", dim: "Strategic Priorities" },
+    { s: "<span class='kw'>Border trade</span> and a logistics hub are its strategic priorities.", a: "x", dim: "Strategic Priorities" },
+    { s: "Its strategic priorities include <span class='kw'>high-tech industries</span> and high-efficiency tropical agriculture.", a: "h", dim: "Strategic Priorities" },
+    { s: "Its strategic priorities include <span class='kw'>energy processing</span>, modern agriculture, and the textile industry.", a: "x", dim: "Strategic Priorities" },
+    { s: "<span class='kw'>High-efficiency tropical agriculture</span> is one of its four strategic priorities.", a: "h", dim: "Strategic Priorities" },
+    { s: "It builds its economy on a <span class='kw'>logistics hub</span> and energy processing.", a: "x", dim: "Strategic Priorities" },
+    /* --- Industrial Clusters --- */
+    { s: "The <span class='kw'>digital economy</span> and commercial aerospace belong to its industrial clusters.", a: "h", dim: "Industrial Clusters" },
+    { s: "<span class='kw'>Cross-border e-commerce</span> is one of its industrial clusters.", a: "x", dim: "Industrial Clusters" },
+    { s: "Deep-sea technology and <span class='kw'>modern biomedicine</span> are listed among its clusters.", a: "h", dim: "Industrial Clusters" },
+    { s: "<span class='kw'>Energy &amp; chemical processing</span> is one of its industrial clusters.", a: "x", dim: "Industrial Clusters" },
+    { s: "<span class='kw'>Petrochemical new materials</span> is one of its industrial clusters.", a: "h", dim: "Industrial Clusters" },
+    { s: "The <span class='kw'>textile &amp; garment</span> industry and agricultural product export are its clusters.", a: "x", dim: "Industrial Clusters" },
+    /* --- Policy Advantages --- */
+    { s: "It offers a <span class='kw'>zero-tariff list</span> and a 15% corporate &amp; personal income tax.", a: "h", dim: "Policy Advantages" },
+    { s: "It enjoys <span class='kw'>land port advantages</span> and Central Asia connectivity.", a: "x", dim: "Policy Advantages" },
+    { s: "It is the <span class='kw'>largest FTP by land area</span> and offers a simplified visa.", a: "h", dim: "Policy Advantages" },
+    { s: "It uses <span class='kw'>special customs supervision</span> and border trade facilitation.", a: "x", dim: "Policy Advantages" }
+];
+
+const L2_DATA = [
+    {
+        q: "1. What are the main differences between the two development models?",
+        opts: [
+            "Both regions follow the same model: they build on tropical tourism and high-tech industries, and they compete for the same foreign tourists and companies.",
+            "Hainan builds island industries — tourism, modern services and high-tech — while Xinjiang builds border industries such as border trade, logistics, energy processing and textiles.",
+            "Xinjiang builds high-end service industries and deep-sea technology, while Hainan focuses on border trade, land ports and energy processing for Central Asian markets."
+        ],
+        c: 1,
+        why: "Each region builds on what it has: an island lives on tourism, services and high-tech; a border region lives on trade, logistics and energy.",
+        speak: "Tell your partner in ONE sentence: which industry difference between the two regions surprises you most?",
+        answers: [],
+        model: "Hainan builds island industries such as tropical tourism, modern services and high-tech, while Xinjiang builds border industries such as border trade, logistics, energy processing and textiles."
+    },
+    {
+        q: "2. How do Hainan and Xinjiang leverage their different geographical advantages?",
+        opts: [
+            "Hainan trades with Central Asia across its land border, while Xinjiang develops deep-sea technology and commercial aerospace from its coastal ports in the east.",
+            "Both regions are surrounded by the sea, so both of them develop port logistics and attract international tourists from Southeast Asia and Central Asia alike.",
+            "Hainan uses its tropical island location in the South China Sea for tourism and open-economy policies, while Xinjiang uses its land border to trade with Central Asia."
+        ],
+        c: 2,
+        why: "Geography decides the path: an island in the South China Sea opens by sea and policy; a landlocked border region opens by land ports.",
+        speak: "Say it aloud: 'Hainan's advantage is ______, and Xinjiang's advantage is ______.'",
+        answers: ["its tropical island location in the South China Sea", "its land border with Central Asia"],
+        model: "Hainan uses its tropical island location in the South China Sea for tourism and open-economy policies, while Xinjiang uses its land border with Central Asia for trade and logistics through land ports."
+    },
+    {
+        q: "3. If you were an investor, which region would you choose? What factors would influence your decision?",
+        opts: [
+            "Location and policies do not really matter when I make an investment decision, because a strong product and good management will always succeed anywhere in China.",
+            "Hainan is always the better choice for every kind of business, because an island location, zero tariffs and a simplified visa make every industry more profitable.",
+            "It depends on my business: tourism or high-tech fits Hainan, while energy processing or cross-border e-commerce fits Xinjiang — so I would check the policy first."
+        ],
+        c: 2,
+        why: "Smart investors match the business to the place — and always check the policies, the market and the location first.",
+        speak: "Make your choice aloud: 'I would choose ______ because I want to invest in ______.'",
+        answers: ["Hainan (or Xinjiang — your choice)", "tourism / high-tech (or energy / cross-border e-commerce)"],
+        model: "I would choose Hainan if I wanted to invest in tourism or high-tech, because of its zero-tariff list, 15% income tax and simplified visa. Location, policies and the market would all influence my decision."
+    },
+    {
+        q: "4. What can the two regions learn from each other for high-quality development?",
+        opts: [
+            "They should copy each other's industries exactly: Hainan should develop border trade and textiles, while Xinjiang should develop deep-sea technology and commercial aerospace.",
+            "Hainan can learn from Xinjiang's land-port connectivity to Central Asia, while Xinjiang can learn from Hainan's opening-up policies such as tariff-free trade and visa reform.",
+            "There is almost nothing to learn, because the two regions are so different in geography and industry that any experience from one region simply does not work in the other."
+        ],
+        c: 1,
+        why: "Different starting points can still share lessons: one is strong in opening-up policies, the other in land connectivity.",
+        speak: "Finish the sentence aloud: 'The two regions can learn from each other by ______.'",
+        answers: ["sharing their strengths — Hainan's opening-up policies and Xinjiang's land-port connectivity"],
+        model: "Hainan can learn from Xinjiang's land-port connectivity to Central Asia, while Xinjiang can learn from Hainan's opening-up policies such as tariff-free trade and visa reform."
+    }
+];
+
+const L3_DATA = [
+    {
+        key: "h", pill: "pill-a", title: "🌴 Hainan FTP",
+        segs: [
+            { t: "Hainan FTP is a free trade port with global influence. Its strategic priorities include " },
+            { b: 0 }, { t: " tourism, modern services, " },
+            { b: 1 }, { t: " industries, and high-efficiency tropical agriculture. Its industrial clusters cover the digital economy, commercial " },
+            { b: 2 }, { t: ", deep-sea technology, and modern biomedicine. Thanks to the " },
+            { b: 3 }, { t: " list, 15% income tax, and a " },
+            { b: 4 }, { t: " visa, it is the largest FTP by land " },
+            { b: 5 }, { t: "." }
+        ],
+        chips: ["tropical", "high-tech", "aerospace", "zero-tariff", "simplified", "area"],
+        chipPool: ["area", "aerospace", "simplified", "tropical", "zero-tariff", "high-tech"]
+    },
+    {
+        key: "x", pill: "pill-b", title: "⛰️ Xinjiang Pilot FTZ",
+        segs: [
+            { t: "Xinjiang Pilot FTZ is a trade gateway in China's northwest. Its strategic priorities include border trade, a " },
+            { b: 0 }, { t: " hub, energy processing, modern agriculture, and the textile industry. Its industrial clusters include cross-border e-commerce, " },
+            { b: 1 }, { t: " &amp; chemical processing, textile &amp; " },
+            { b: 2 }, { t: ", and agricultural product " },
+            { b: 3 }, { t: ". With land port " },
+            { b: 4 }, { t: " and " },
+            { b: 5 }, { t: " connectivity, it links China with Central Asia." }
+        ],
+        chips: ["logistics", "energy", "garment", "export", "advantages", "Central Asia"],
+        chipPool: ["export", "Central Asia", "garment", "logistics", "advantages", "energy"]
+    }
+];
+
+const CHECKLIST = [
+    "I said the strategic priorities.",
+    "I named at least two industrial clusters.",
+    "I mentioned one policy advantage.",
+    "I spoke for about one minute — not word-by-word reading."
+];
+
+/* ==================== STATE & SOUND ==================== */
+let score = 0, soundOn = true, audioCtx = null;
+let l1 = null, l2 = null, l3 = null;
+
+function beep(freq, dur, type, vol) {
+    if (!soundOn) return;
+    try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = type || "sine"; o.frequency.value = freq;
+        g.gain.value = vol || 0.12;
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start();
+        g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + (dur || 0.15));
+        o.stop(audioCtx.currentTime + (dur || 0.15));
+    } catch (e) {}
+}
+function sndClick()  { beep(520, 0.07, "sine", 0.07); }
+function sndGood()   { beep(660, 0.12); setTimeout(() => beep(880, 0.18), 110); }
+function sndBad()    { beep(196, 0.22, "sawtooth", 0.08); }
+function sndLevelUp(){ [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => beep(f, 0.16), i * 120)); }
+function toggleSound() {
+    soundOn = !soundOn;
+    document.getElementById("btn-sound").textContent = soundOn ? "🔊" : "🔇";
+}
+
+function addScore(n) { score += n; document.getElementById("score-pill").textContent = "XP: " + score; }
+function setProgress(pct) { document.getElementById("progress-fill").style.width = pct + "%"; }
+function setStage(active) {
+    for (let i = 1; i <= 3; i++) {
+        const t = document.getElementById("tab-" + i);
+        t.className = "tab" + (i < active ? " done" : i === active ? " on" : "");
+    }
+}
+function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function openFact()  { sndClick(); document.getElementById("fact-modal").classList.add("show"); }
+function closeFact() { document.getElementById("fact-modal").classList.remove("show"); }
+
+/* ---------------- LEVEL SELECT ---------------- */
+function openLevels()  { sndClick(); document.getElementById("level-modal").classList.add("show"); }
+function closeLevels() { document.getElementById("level-modal").classList.remove("show"); }
+
+/* Jump straight to any stage (level select).
+   Stage 1 -> the reading/intel screen, Stage 2 -> quiz, Stage 3 -> fill blanks. */
+function gotoLevel(n) {
+    closeLevels();
+    clearInterval(l1 && l1.timer);
+    clearInterval(l3 && l3.timer);
+    if (n === 1)      startL1();
+    else if (n === 2) startL2();
+    else if (n === 3) startL3();
+}
+function confetti(n) {
+    const layer = document.getElementById("confetti-layer");
+    const colors = ["#F7D046", "#2FB98D", "#4A9DE8", "#E86A6A", "#F59E0B", "#3DA84A"];
+    for (let i = 0; i < n; i++) {
+        const c = document.createElement("div");
+        c.className = "cf";
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.animationDuration = (2.2 + Math.random() * 1.8) + "s";
+        c.style.animationDelay = (Math.random() * 0.6) + "s";
+        layer.appendChild(c);
+        setTimeout(() => c.remove(), 4800);
+    }
+}
+
+/* ==================== LEVEL 1 ==================== */
+const L1_TIME = 120;   // seconds for the whole Stage-1 quiz (16 facts)
+
+function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function startL1() {           // entry: show the intel reading screen first
+    sndClick();
+    clearInterval(l1 && l1.timer);
+    setStage(1); setProgress(4);
+    showScreen("screen-l1read");
+}
+
+function startL1Quiz() {       // after the student confirms they have read
+    sndClick();
+    clearInterval(l1 && l1.timer);
+    l1 = { i: 0, tries: 0, firstTry: 0, pts: 0, streak: 0, best: 0,
+           pool: shuffle(L1_DATA), left: L1_TIME, timer: null, over: false };
+    setStage(1); setProgress(4);
+    document.getElementById("l1-timer").textContent = L1_TIME;
+    document.getElementById("l1-timer-wrap").classList.remove("warn");
+    showScreen("screen-l1");
+    l1Show();
+    l1.timer = setInterval(l1Tick, 1000);
+}
+
+function l1Tick() {
+    l1.left--;
+    const t = document.getElementById("l1-timer");
+    t.textContent = Math.max(l1.left, 0);
+    if (l1.left <= 20) document.getElementById("l1-timer-wrap").classList.add("warn");
+    if (l1.left <= 0) l1TimeUp();
+}
+
+function l1TimeUp() {
+    clearInterval(l1.timer);
+    l1.over = true;
+    sndBad();
+    document.getElementById("btn-h").disabled = true;
+    document.getElementById("btn-x").disabled = true;
+    document.getElementById("l1-next").style.display = "none";
+    const fb = document.getElementById("l1-feedback");
+    fb.className = "feedback bad show";
+    fb.innerHTML = "<span class='fb-tag'>⏰ Time's up! (" + L1_TIME + "s)</span>" +
+        "You reached fact " + (l1.i + 1) + " of " + L1_DATA.length + ". " +
+        "<div class='say-note'>🗣️ Now read the two Intel cards aloud once, then press <b>Restart</b> for a shuffled second round.</div>";
+    l1Finish(true);
+}
+
+function l1Show() {
+    l1.tries = 0;
+    const item = l1.pool[l1.i];
+    document.getElementById("l1-counter").textContent = "Fact " + (l1.i + 1) + " / " + L1_DATA.length;
+    document.getElementById("l1-statement").innerHTML = "“" + item.s + "”";
+    document.getElementById("l1-feedback").className = "feedback";
+    document.getElementById("l1-next").style.display = "none";
+    const bh = document.getElementById("btn-h"), bx = document.getElementById("btn-x");
+    bh.disabled = false; bx.disabled = false;
+    bh.classList.remove("correct", "wrong"); bx.classList.remove("correct", "wrong");
+}
+function l1Answer(ans) {
+    if (l1.over) return;
+    const item = l1.pool[l1.i];
+    const bh = document.getElementById("btn-h"), bx = document.getElementById("btn-x");
+    const fb = document.getElementById("l1-feedback");
+    const right = ans === item.a;
+    l1.tries++;
+    bh.disabled = true; bx.disabled = true;
+    const target = item.a === "h" ? bh : bx;
+    const picked = ans === "h" ? bh : bx;
+    if (right) {
+        target.classList.add("correct");
+        sndGood();
+        const pts = l1.tries === 1 ? 10 : 5;
+        addScore(pts); l1.pts += pts;
+        l1.streak++; l1.best = Math.max(l1.best, l1.streak);
+        if (l1.tries === 1) l1.firstTry++;
+        const streakTxt = l1.streak >= 2 ? " 🔥 " + l1.streak + " in a row!" : "";
+        fb.className = "feedback good show";
+        fb.innerHTML = "<span class='fb-tag'>✅ Correct! +" + pts + " XP" + streakTxt + "</span>" +
+            (l1.tries === 1 ? "First try — excellent reading! " : "Got it on the second try! ") +
+            "<span class='fb-dim'>" + item.dim + "</span>" +
+            "<div class='say-note'>🗣️ Read the whole fact aloud once before you continue.</div>";
+    } else {
+        picked.classList.add("wrong"); target.classList.add("correct");
+        sndBad();
+        l1.streak = 0;
+        fb.className = "feedback bad show";
+        fb.innerHTML = "<span class='fb-tag'>❌ Not this one — it's the other region!</span>" +
+            "Check the 📖 Fact Card, then read the correct fact aloud twice." +
+            "<span class='fb-dim'>" + item.dim + "</span>";
+    }
+    document.getElementById("l1-next").style.display = "inline-block";
+    document.getElementById("l1-next").textContent = (l1.i === L1_DATA.length - 1) ? "Finish Stage 1 🏁" : "Next Fact ▶";
+}
+function l1Next() {
+    if (l1.over) return;
+    sndClick();
+    l1.i++;
+    if (l1.i < L1_DATA.length) { setProgress(4 + (l1.i / L1_DATA.length) * 29); l1Show(); }
+    else { clearInterval(l1.timer); l1Finish(false); }
+}
+function showLevelResult(cfg) {
+    document.getElementById("lr-banner").innerHTML = cfg.banner;
+    document.getElementById("lr-stats").innerHTML = cfg.stats;
+    document.getElementById("lr-note").innerHTML = cfg.note;
+    const retry = document.getElementById("lr-retry");
+    const go = document.getElementById("lr-go");
+    if (cfg.retryLabel) {
+        retry.style.display = "inline-block";
+        retry.textContent = cfg.retryLabel;
+        retry.onclick = cfg.onRetry;
+    } else {
+        retry.style.display = "none";
+    }
+    go.textContent = cfg.goLabel;
+    go.onclick = cfg.onGo;
+    showScreen("screen-lresult");
+}
+function l1Finish(timedOut) {
+    clearInterval(l1.timer);
+    const answered = l1.i + (timedOut ? 0 : 1);
+    setProgress(33); setStage(2);
+    if (!timedOut) { sndLevelUp(); confetti(40); }
+    const max = L1_DATA.length * 10;
+    const pct = Math.round(l1.pts / max * 100);
+    showLevelResult({
+        banner: timedOut
+            ? "<div class='big'>⏰ Stage 1 — Time's Up</div><div class='sub'>You answered " + Math.min(answered, L1_DATA.length) + " of " + L1_DATA.length + " facts in " + L1_TIME + " seconds.</div>"
+            : "<div class='big'>Stage 1 Complete! 🎉</div><div class='sub'>You told the two regions apart like a real trade analyst — all " + L1_DATA.length + " facts covered.</div>",
+        stats:
+            "<div class='stat-card'><div class='v'>" + l1.pts + "/" + max + "</div><div class='k'>XP</div></div>" +
+            "<div class='stat-card'><div class='v'>" + l1.firstTry + "/" + L1_DATA.length + "</div><div class='k'>FIRST-TRY HITS</div></div>" +
+            "<div class='stat-card'><div class='v'>🔥" + l1.best + "</div><div class='k'>BEST STREAK</div></div>",
+        note: timedOut
+            ? "No problem — click <b>Restart this Stage</b>. The facts come in a <b>new random order</b> every time, so try again! 💪"
+            : (pct >= 80 ? "Outstanding! You are ready for the thinking questions. 💪"
+                         : "Solid work! Skim the 📖 Fact Card once more before Stage 2 — it will help."),
+        retryLabel: "🔄 Restart Stage 1 (shuffled)",
+        onRetry: startL1Quiz,
+        goLabel: "Go to Stage 2 🎯",
+        onGo: startL2
+    });
+}
+
+/* ==================== LEVEL 2 ==================== */
+/* Question order stays FIXED (Q1 -> Q2 -> Q3 -> Q4), matching the course PPT.
+   Only the three options inside each question are shuffled. */
+function buildL2Pool() {
+    return L2_DATA.map(q => {
+        const idx = q.opts.map((t, i) => ({ t, correct: i === q.c }));
+        const mixed = shuffle(idx);
+        return { q: q.q, opts: mixed.map(o => o.t), c: mixed.findIndex(o => o.correct),
+                 why: q.why, speak: q.speak, answers: q.answers || [], model: q.model };
+    });
+}
+function startL2() {
+    sndClick();
+    l2 = { i: 0, pts: 0, firstTry: 0, pool: buildL2Pool(), solved: [], picks: [], triesList: [] };
+    setStage(2); setProgress(36);
+    showScreen("screen-l2");
+    l2Show();
+}
+function l2Show() {
+    const q = l2.pool[l2.i];
+    const alreadySolved = !!l2.solved[l2.i];
+    l2.tries = l2.triesList[l2.i] || 0;
+    l2.solvedNow = alreadySolved;
+    document.getElementById("l2-counter").textContent = "Question " + (l2.i + 1) + " / " + l2.pool.length;
+    document.getElementById("l2-question").textContent = q.q;
+    document.getElementById("l2-feedback").className = "feedback";
+    document.getElementById("l2-speak").style.display = "none";
+    document.getElementById("l2-speak").innerHTML = "";
+    document.getElementById("l2-next").style.display = "none";
+
+    /* Previous button: available from question 2 onwards */
+    const prev = document.getElementById("l2-prev");
+    prev.style.display = l2.i > 0 ? "inline-block" : "none";
+    prev.disabled = false;
+
+    const box = document.getElementById("l2-options");
+    box.innerHTML = "";
+    const alreadyPicked = l2.picks[l2.i];
+    q.opts.forEach((t, idx) => {
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.innerHTML = "<span class='letter'>" + "ABC"[idx] + "</span>" + t;
+        b.onclick = () => l2Pick(idx, b);
+        box.appendChild(b);
+    });
+
+    /* restore a question the student already answered correctly */
+    if (alreadySolved) {
+        const opts = [...box.querySelectorAll(".opt")];
+        opts.forEach(o => o.disabled = true);
+        if (alreadyPicked !== undefined && opts[alreadyPicked]) {
+            opts[alreadyPicked].classList.add("correct");
+        }
+        const fb = document.getElementById("l2-feedback");
+        fb.className = "feedback good show";
+        fb.innerHTML = "<span class='fb-tag'>✅ Already answered</span>" + q.why;
+        l2RestoreSpeak(q);
+        document.getElementById("l2-next").style.display = "inline-block";
+        document.getElementById("l2-next").textContent =
+            (l2.i === l2.pool.length - 1) ? "Finish Stage 2 🏁" : "Next Question ▶";
+    }
+}
+
+/* rebuild the speaking moment for a question already answered */
+function l2RestoreSpeak(q) {
+    const sp = document.getElementById("l2-speak");
+    sp.style.display = "block";
+    sp.innerHTML = "<b>🗣️ Speaking moment:</b> " + q.speak +
+        "<div class='center' style='margin-top:10px;'>" +
+        "<button class='btn btn-ghost' style='font-size:.85rem; padding:8px 20px;' onclick='showL2Model()'>💡 Show a Sample Answer</button>" +
+        "</div>" +
+        "<div class='l2-model' id='l2-model'></div>";
+}
+
+/* go back to the previous question */
+function l2Prev() {
+    if (l2.i <= 0) return;
+    sndClick();
+    l2.i--;
+    setProgress(33 + (l2.i / l2.pool.length) * 30);
+    l2Show();
+}
+function l2Pick(idx, btn) {
+    if (l2.solved[l2.i]) return;            // already answered correctly — locked
+    const q = l2.pool[l2.i];
+    const opts = [...document.querySelectorAll("#l2-options .opt")];
+    const fb = document.getElementById("l2-feedback");
+
+    if (idx === q.c) {
+        // -------- correct: lock everything, remember the answer --------
+        l2.solved[l2.i] = true;
+        l2.picks[l2.i] = idx;
+        l2.triesList[l2.i] = l2.tries;
+        opts.forEach(o => o.disabled = true);
+        btn.classList.remove("wrong");
+        btn.classList.add("correct");
+        sndGood();
+        const pts = l2.tries === 0 ? 25 : 15;
+        addScore(pts); l2.pts += pts; l2.firstTry++;
+        fb.className = "feedback good show";
+        fb.innerHTML = "<span class='fb-tag'>✅ Exactly! +" + pts + " XP</span>" + q.why;
+        l2RestoreSpeak(q);
+        document.getElementById("l2-next").style.display = "inline-block";
+        document.getElementById("l2-next").textContent = (l2.i === l2.pool.length - 1) ? "Finish Stage 2 🏁" : "Next Question ▶";
+    } else {
+        // -------- wrong: mark, NO answer revealed, allow retry --------
+        l2.tries++;
+        l2.triesList[l2.i] = l2.tries;
+        btn.classList.add("wrong");
+        btn.disabled = true;                // the wrong option is spent
+        sndBad();
+        fb.className = "feedback bad show";
+        fb.innerHTML = "<span class='fb-tag'>❌ Not quite — try again!</span>" +
+            "That is not the best answer for this question. Read the options once more and pick again. " +
+            "(Answers are not shown here — you can always check the 📖 Fact Card.)";
+    }
+}
+function showL2Model() {
+    sndClick();
+    const q = l2.pool[l2.i];
+    const box = document.getElementById("l2-model");
+    if (!box || box.classList.contains("show")) return;
+
+    /* 1) fill the ______ blanks inside the Speaking-moment sentence with the answer words */
+    const answers = q.answers || [];
+    let k = 0;
+    const filledSpeak = String(q.speak).replace(/(_{3,}|＿{3,})/g, () => {
+        const a = answers[k] !== undefined ? answers[k] : "?";
+        k++;
+        return "<span class='blank-key'>" + a + "</span>";
+    });
+
+    let html = "";
+    if (answers.length && /<span class='blank-key'>/.test(filledSpeak)) {
+        html += "<b>📋 The blanks in this sentence:</b><div style='margin:6px 0 2px;'>" +
+                filledSpeak + "</div>";
+    }
+    /* 2) always finish with the full model answer */
+    html += "<b>📋 Sample answer:</b> " + (q.model || q.opts[q.c]);
+    box.innerHTML = html;
+    box.classList.add("show");
+}
+function l2Next() {
+    sndClick();
+    l2.i++;
+    if (l2.i < l2.pool.length) { setProgress(33 + (l2.i / l2.pool.length) * 30); l2Show(); }
+    else l2Finish();
+}
+function l2Finish() {
+    setProgress(66); setStage(3);
+    sndLevelUp(); confetti(40);
+    const max = L2_DATA.length * 25;
+    showLevelResult({
+        banner: "<div class='big'>Stage 2 Complete! 🧠</div><div class='sub'>You compared the two models — and said your own opinion out loud.</div>",
+        stats:
+            "<div class='stat-card'><div class='v'>" + l2.pts + "/" + max + "</div><div class='k'>XP</div></div>" +
+            "<div class='stat-card'><div class='v'>" + l2.firstTry + "/" + L2_DATA.length + "</div><div class='k'>FIRST-TRY WINS</div></div>",
+        note: "Not happy with your XP? Restart this stage for a fresh round — or move on: the final challenge is <b>no clicking, only your voice!</b> 🎤",
+        retryLabel: "🔄 Restart Stage 2",
+        onRetry: startL2,
+        goLabel: "Go to Stage 3 🎤",
+        onGo: startL3
+    });
+}
+
+/* ==================== LEVEL 3 ==================== */
+function startL3() {
+    sndClick();
+    l3 = { part: 0, done: [false, false], started: [true, false],
+           cursor: 0, filled: [null, null, null, null, null, null],
+           locked: [false, false, false, false, false, false],
+           tries: 0, wrongTotal: 0,
+           stars: [0, 0], timer: null, left: 60, checks: [false, false, false, false] };
+    setStage(3); setProgress(68);
+    showScreen("screen-l3");
+    l3Render();
+}
+
+/* let the student start with either region */
+function l3GoPart(n) {
+    if (!l3) startL3();
+    if (l3.part === n && l3.started[n]) return;
+    sndClick();
+    l3.part = n;
+    l3.started[n] = true;
+    l3Render();
+}
+
+/* redo the current part from scratch */
+function l3RedoPart() {
+    sndClick();
+    if (!l3) return;
+    l3.stars[l3.part] = 0;
+    l3.done[l3.part] = false;
+    l3Render();
+    const fb = document.getElementById("l3-feedback");
+    fb.className = "feedback good show";
+    fb.innerHTML = "<span class='fb-tag'>🔄 Part restarted</span>Word bank is full again — try the frame once more!";
+}
+
+function l3Render() {
+    const part = L3_DATA[l3.part];
+    document.querySelectorAll(".part-pill").forEach(p => p.classList.remove("on"));
+    document.getElementById(part.pill).classList.add("on");
+
+    document.getElementById("l3-instruction").innerHTML = l3.part === 0
+        ? "👉 Click the words below to fill in the speech frame — <b>one blank at a time</b>. A right word locks in green; a wrong word flashes red and goes back to the bank. When the frame is complete, read it — then retell it <b>in your own words</b>!"
+        : "👉 Part B — same rule: <b>one blank at a time</b>. Get it right to move to the next blank, then read the frame and retell <b>Xinjiang Pilot FTZ</b> in your own words!";
+
+    document.getElementById("l3-model").classList.remove("show");
+    document.getElementById("l3-model").innerHTML = "";
+    const fb = document.getElementById("l3-feedback");
+    fb.className = "feedback"; fb.innerHTML = "";
+    document.getElementById("l3-speak").classList.remove("show");
+    document.getElementById("l3-checklist").style.display = "none";
+    document.getElementById("l3-checklist").innerHTML = "";
+    document.getElementById("l3-stars").textContent = l3.stars[l3.part] ? "⭐".repeat(l3.stars[l3.part]) : "";
+    document.getElementById("l3-redo").style.display = "inline-block";
+
+    // reset progress for this part
+    l3.cursor = 0;
+    l3.tries = 0;
+    l3.filled = [null, null, null, null, null, null];
+    l3.locked = [false, false, false, false, false, false];
+    l3.checks = [false, false, false, false];
+
+    const frame = document.getElementById("l3-frame");
+    frame.innerHTML = "";
+    part.segs.forEach(seg => {
+        if (seg.t !== undefined) {
+            const span = document.createElement("span");
+            span.innerHTML = seg.t;
+            frame.appendChild(span);
+        } else {
+            const idx = seg.b;
+            const blank = document.createElement("span");
+            blank.className = "blank";
+            blank.textContent = "______";
+            blank.onclick = () => l3BlankClick(idx);
+            blank.id = "l3-blank-" + idx;
+            frame.appendChild(blank);
+        }
+    });
+
+    const bank = document.getElementById("l3-chips");
+    bank.innerHTML = "";
+    part.chipPool.forEach(chipText => {
+        const c = document.createElement("button");
+        c.className = "chip";
+        c.textContent = chipText;
+        c.onclick = () => l3ChipClick(chipText, c);
+        c.dataset.word = chipText;
+        bank.appendChild(c);
+    });
+
+    l3MarkCursor();
+}
+
+/* highlight the blank the student must fill next */
+function l3MarkCursor() {
+    const part = L3_DATA[l3.part];
+    part.segs.forEach(seg => {
+        if (seg.b === undefined) return;
+        const el = document.getElementById("l3-blank-" + seg.b);
+        if (el) el.classList.toggle("current", seg.b === l3.cursor);
+    });
+}
+
+/* ONE blank at a time: a wrong chip shows the error right away and is NOT accepted;
+   only a correct chip locks in and unlocks the next blank. */
+function l3ChipClick(word, chipEl) {
+    if (!l3 || l3.done[l3.part]) return;
+    const part = L3_DATA[l3.part];
+    const idx = l3.cursor;
+    if (idx >= 6) return;
+
+    const blank = document.getElementById("l3-blank-" + idx);
+    const fb = document.getElementById("l3-feedback");
+    const correct = part.chips[idx];
+    const right = word.toLowerCase() === correct.toLowerCase();
+
+    if (right) {
+        /* ---- correct: lock it in and move on ---- */
+        sndGood();
+        l3.filled[idx] = word;
+        l3.locked[idx] = true;
+        chipEl.classList.add("used");
+        blank.textContent = word;
+        blank.classList.remove("err", "filled", "current");
+        blank.classList.add("locked");
+        const bonus = l3.tries === 0 ? " First try — brilliant! 🎉" : " Great — you got it! ✅";
+        fb.className = "feedback good show";
+        fb.innerHTML = "<span class='fb-tag'>✅ Correct! +5 XP</span>" + bonus;
+        addScore(5);
+        l3.tries = 0;
+        l3.cursor++;
+        l3MarkCursor();
+        if (l3.cursor >= 6) l3Success();
+    } else {
+        /* ---- wrong: show the error immediately, stay on the same blank ---- */
+        sndBad();
+        l3.tries++;
+        l3.wrongTotal++;
+        blank.textContent = word;
+        blank.classList.add("err");
+        chipEl.classList.add("shake-err");
+        setTimeout(() => chipEl.classList.remove("shake-err"), 400);
+        fb.className = "feedback bad show";
+        fb.innerHTML = "<span class='fb-tag'>❌ Not correct — try another word!</span>" +
+            "That word does not fit this blank. Look at the sentence around the blank, then pick a different word. " +
+            "(The blank will not move on until it is right.)";
+        setTimeout(() => {
+            if (l3.filled[idx] !== true && !l3.locked[idx]) {
+                blank.textContent = "______";
+                blank.classList.remove("err");
+                blank.classList.add("current");
+            }
+        }, 800);
+    }
+}
+
+/* clicking a wrong (not yet locked) blank just clears it for a retry */
+function l3BlankClick(idx) {
+    if (!l3 || l3.locked[idx]) return;
+    if (idx !== l3.cursor) return;   // only the current blank can be retried
+    const blank = document.getElementById("l3-blank-" + idx);
+    blank.textContent = "______";
+    blank.classList.remove("err", "filled");
+    blank.classList.add("current");
+}
+
+/* kept for compatibility: the frame is now validated one blank at a time */
+function l3Check() { /* no longer used — validation is per blank */ }
+
+/* kept for compatibility with older flow */
+function l3ValidateAll() {
+    const part = L3_DATA[l3.part];
+    const okAll = part.chips.every((w, i) => l3.locked[i]);
+    if (okAll) l3Success();
+}
+
+function l3Success() {
+    const part = L3_DATA[l3.part];
+    l3.done[l3.part] = true;
+    if (l3.stars[l3.part] === 0) l3.stars[l3.part] = l3.wrongTotal === 0 ? 3 : 2;
+    if (l3.wrongTotal === 0) l3.stars[l3.part] = 3;
+
+    const model = document.getElementById("l3-model");
+    let html = "<b>📋 Model speech — " + part.title + ":</b><br>";
+    part.segs.forEach(seg => {
+        if (seg.t !== undefined) html += seg.t;
+        else html += "<span class='a'>" + part.chips[seg.b] + "</span>";
+    });
+    model.innerHTML = html;
+    model.classList.add("show");
+
+    l3.left = 60;
+    document.getElementById("l3-timer").textContent = "60";
+    document.getElementById("l3-timer").style.color = "";
+    document.getElementById("l3-timer-fill").style.width = "100%";
+    document.getElementById("l3-timer-start").style.display = "inline-block";
+    document.getElementById("l3-speak").classList.add("show");
+
+    const nextBtn = document.getElementById("l3-nextpart");
+    const finBtn = document.getElementById("l3-finish");
+    nextBtn.style.display = "none";
+    finBtn.style.display = "none";
+    if (l3.part === 0) {
+        nextBtn.textContent = "Part B: Xinjiang ▶";
+        nextBtn.style.display = "inline-block";
+    } else {
+        nextBtn.textContent = "Part A: Hainan ▶";
+        nextBtn.style.display = "inline-block";
+        finBtn.style.display = "inline-block";
+    }
+    nextBtn.onclick = () => { sndClick(); l3GoPart(l3.part === 0 ? 1 : 0); };
+}
+
+/* kept for compatibility */
+function l3NextPart() { sndClick(); l3GoPart(l3.part === 0 ? 1 : 0); }
+function l3StartTimer() {
+    document.getElementById("l3-timer-start").style.display = "none";
+    clearInterval(l3.timer);
+    l3.timer = setInterval(() => {
+        l3.left--;
+        const t = document.getElementById("l3-timer");
+        t.textContent = l3.left;
+        document.getElementById("l3-timer-fill").style.width = (l3.left / 60 * 100) + "%";
+        if (l3.left <= 10) t.style.color = "#c0392b";
+        if (l3.left <= 0) l3StopTimer(false);
+    }, 1000);
+}
+function l3StopTimer(early) {
+    clearInterval(l3.timer);
+    document.getElementById("l3-timer-start").style.display = "none";
+    document.getElementById("l3-timer").style.color = "var(--ink)";
+    document.getElementById("l3-timer").textContent = early ? "✓" : "0";
+    const list = document.getElementById("l3-checklist");
+    list.style.display = "block";
+    list.innerHTML = "<div class='say-note' style='margin-bottom:10px;'>✅ <b>Partner checklist</b> — tick what you heard (or self-check):</div>";
+    CHECKLIST.forEach((txt) => {
+        const item = document.createElement("div");
+        item.className = "check-item";
+        item.innerHTML = "<span class='box'></span><span>" + txt + "</span>";
+        item.onclick = () => { item.classList.toggle("on"); sndClick(); };
+        list.appendChild(item);
+    });
+    const btnRow = document.createElement("div");
+    btnRow.className = "center";
+    btnRow.style.marginTop = "10px";
+    const b = document.createElement("button");
+    b.className = "btn btn-warm";
+    b.textContent = "Count My Stars ⭐";
+    b.onclick = l3ConfirmStars;
+    btnRow.appendChild(b);
+    list.appendChild(btnRow);
+    list.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+function l3ConfirmStars() {
+    const on = document.querySelectorAll("#l3-checklist .check-item.on").length;
+    const speakStars = on >= 4 ? 3 : on >= 3 ? 2 : 1;
+    l3.stars[l3.part] = speakStars;
+    addScore(speakStars * 10);
+    const row = document.getElementById("l3-stars");
+    row.textContent = "⭐".repeat(speakStars) + "☆".repeat(3 - speakStars);
+    sndLevelUp();
+    confetti(l3.done[0] && l3.done[1] ? 60 : 30);
+    document.querySelectorAll("#l3-checklist .check-item").forEach(i => i.style.pointerEvents = "none");
+    const cb = document.querySelector("#l3-checklist .btn");
+    if (cb) cb.disabled = true;
+    if (l3.done[0] && l3.done[1]) setProgress(100);
+}
+function showFinal() {
+    sndLevelUp(); confetti(80);
+    setStage(4);
+    const totalStars = l3.stars[0] + l3.stars[1];
+    const totalPts = score;
+    const maxPts = L1_DATA.length * 10 + L2_DATA.length * 25 + 60;
+    const pct = Math.round(totalPts / maxPts * 100);
+    let badge, emoji, note;
+    if (pct >= 85)      { badge = "Gold Global Trade Explorer"; emoji = "🏆"; note = "Incredible! You can now introduce both free trade models confidently in English. Your teacher will be impressed!"; }
+    else if (pct >= 65) { badge = "Silver Trade Navigator";     emoji = "🥈"; note = "Well done! Review the Fact Card once more, then retell both regions to a classmate — you are almost at gold level."; }
+    else                { badge = "Bronze Frontier Explorer";   emoji = "🥉"; note = "Good start! Play Stage 1 again to sharpen the facts, then try the retelling once more. Every try makes your English stronger."; }
+    document.getElementById("fin-badge-emoji").textContent = emoji;
+    document.getElementById("fin-badge").textContent = badge;
+    document.getElementById("fin-stats").innerHTML =
+        "<div class='stat-card'><div class='v'>" + (l1 ? l1.pts : 0) + "/" + (L1_DATA.length * 10) + "</div><div class='k'>STAGE 1</div></div>" +
+        "<div class='stat-card'><div class='v'>" + (l2 ? l2.pts : 0) + "/" + (L2_DATA.length * 25) + "</div><div class='k'>STAGE 2</div></div>" +
+        "<div class='stat-card'><div class='v'>⭐ " + totalStars + "/6</div><div class='k'>STAGE 3 SPEAKING</div></div>" +
+        "<div class='stat-card'><div class='v'>" + totalPts + "</div><div class='k'>TOTAL XP</div></div>";
+    document.getElementById("fin-note").textContent = note;
+    showScreen("screen-final");
+}
+function resetGame() {
+    sndClick();
+    clearInterval(l1 && l1.timer);
+    clearInterval(l3 && l3.timer);
+    score = 0;
+    l1 = null; l2 = null; l3 = null;
+    document.getElementById("score-pill").textContent = "XP: 0";
+    setProgress(0);
+    setStage(0);
+    showScreen("screen-start");
+}
+</script>
+</body>
+</html>
