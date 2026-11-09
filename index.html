@@ -201,6 +201,8 @@
         display: flex; align-items: center; justify-content: center;
     }
     .l1-statement .kw { color: var(--orange); }
+    /* flex 容器内必须用单一包裹元素，否则文本节点和 span 会各自成为 flex 项，单词间距错乱 */
+    .l1-statement .stmt-wrap { display: inline; }
     .choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
     .choice-btn {
         border: 3px solid var(--ink); cursor: pointer; font-family: inherit; color: #fff;
@@ -936,7 +938,7 @@ function l1Show() {
     l1.tries = 0;
     const item = l1.pool[l1.i];
     document.getElementById("l1-counter").textContent = "Fact " + (l1.i + 1) + " / " + L1_DATA.length;
-    document.getElementById("l1-statement").innerHTML = "“" + item.s + "”";
+    document.getElementById("l1-statement").innerHTML = "<span class='stmt-wrap'>“" + item.s + "”</span>";
     document.getElementById("l1-feedback").className = "feedback";
     document.getElementById("l1-next").style.display = "none";
     const bh = document.getElementById("btn-h"), bx = document.getElementById("btn-x");
